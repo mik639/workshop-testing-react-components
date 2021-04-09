@@ -42,6 +42,7 @@ export class Popup extends PureComponent {
       <RCPopup
         {...this.props}
         onClose={this.onClose}
+        destroyOnClose
         className={classNames(this.props.className, {
           "full-popup": this.props.full,
           "hide-close": !this.props.showClose

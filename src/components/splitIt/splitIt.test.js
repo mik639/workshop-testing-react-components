@@ -1,5 +1,6 @@
 import React from "react";
-import {render, screen} from '@testing-library/react';
+import '@testing-library/jest-dom';
+import {render, waitFor, fireEvent} from '@testing-library/react';
 
 import { SplitIt } from "./splitIt";
 
@@ -18,32 +19,49 @@ describe("<SplitIt/> in base product info", () => {
   });
 
   it('should call getData prop on mount', () => {
-    // Давайте отрендерим компонент и проверим что проп getData был вызван
+    render(<SplitIt {...props} />);
+    expect(props.getData).toHaveBeenCalledTimes(1);
   });
 
   it("should render text and button if total > over", () => {
-    // Проверим что при условии, что сумма заказа больше минимального порога
-    // компонент рендерит нужный текст и кнопку "learn more"
+    const {queryByText, queryByTitle} = render(<SplitIt {...props} />);
+
+    expect(queryByText('Or $ 50.00 x 3')).toBeInTheDocument();
+    expect(queryByTitle('learn more')).toBeInTheDocument();
   });
 
   it("should NOT render text and button if total < over", () => {
-    // Проверим что при условии, что сумма заказа меньше минимального порога
-    // компонент ничего не рендерит
+    const {queryByText, queryByTitle} = render(<SplitIt {...props} total={100} over={120} />);
+
+    expect(queryByText('Or $ 50.00 x 3')).not.toBeInTheDocument();
+    expect(queryByTitle('learn more')).not.toBeInTheDocument();
   });
 
   it("should NOT render text and button if data is loading", () => {
-    // Проверим что компонент ничего не рендерит пока данные не загружены
+    const {queryByText, queryByTitle} = render(<SplitIt {...props} isLoaded={false} />);
+
+    expect(queryByText('Or $ 50.00 x 3')).not.toBeInTheDocument();
+    expect(queryByTitle('learn more')).not.toBeInTheDocument();
   });
 
   test('learn more popup', () => {
-    // Теперь давайте опишем взаимодействие пользователя с попапом
+    const {getByTitle, queryByText, getByRole, debug} = render(<SplitIt {...props} />);
+    const dataLayerSpy = jest.spyOn(window.dataLayer, 'push');
 
-    // 1. Найдем кнопку "learn more", и кликнем по ней
-    // 1.1. Проверим что была отправлена аналитика
-    // 1.2. Проверим что попап отобразился, для этого проверим что на экране появился его заголовок
-    //      с рассчетом суммы платежа (Your monthly payment $50 ($50 × 3 = $150))
-    
-    // 2. Найдем в попапе кнопку "Close", и кликнем по ней.
-    // 2.1 Проверим что попап больше не отображается на экране.
+    const button = getByTitle('learn more');
+    fireEvent.click(button);
+
+    expect(dataLayerSpy).toHaveBeenCalledWith({
+      event: "PDPInteraction",
+      eventAction: "Product Details",
+      eventCategory: "PDP - D",
+      eventLabel: "Learn More - Split It"
+    });
+    expect(queryByText('Your monthly payment $50 ($50 × 3 = $150)')).toBeInTheDocument();
+
+    const closeButton = getByRole('button', {name: 'Close'});
+    fireEvent.click(closeButton);
+
+    expect(queryByText('Your monthly payment $50 ($50 × 3 = $150)')).not.toBeInTheDocument();
   });
 });

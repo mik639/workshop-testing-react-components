@@ -26,11 +26,9 @@ export class MonthlyPayments extends PureComponent {
       <span>
         Your monthly payment {currency}
         {partCost} (
-        <span className="payment">
           {currency}
           {partCost} &times; {parts} = {currency}
           {total}
-        </span>
         )
       </span>
     );
