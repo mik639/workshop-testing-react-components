@@ -66,7 +66,11 @@ export class SplitIt extends PureComponent {
             >{`Or ${currency} ${instalmentPrice} x ${instalments}`}</span>
             <span>
               Interest - Free Payments
-              <button className={s.btn} onClick={this.openPopup}>
+              <button
+                className={s.btn}
+                onClick={this.openPopup}
+                title="learn more"
+              >
                 <QuestionMark />
               </button>
             </span>

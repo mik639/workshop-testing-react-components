@@ -15,7 +15,8 @@ describe("<SplitIt/> in base product info", () => {
       instalments: 3,
       over: 120,
       currency: "$",
-      getData: jest.fn()
+      getData: jest.fn(),
+      isLoaded: true
     };
     wrapper = shallow(<SplitIt {...props} />);
     window.dataLayer = [];
@@ -57,5 +58,23 @@ describe("<SplitIt/> in base product info", () => {
       wrapper.instance().closePopup();
       expect(wrapper.state("popupVisible")).toBe(false);
     });
+  });
+
+  it("should render text and button if total > over", () => {
+    wrapper.setProps({ total: 150, over: 100 });
+    expect(wrapper.contains("Or $ 50.00 x 3")).toBe(true);
+    expect(wrapper.find('[title="learn more"]')).toHaveLength(1);
+  });
+
+  it("should NOT render text and button if total < over", () => {
+    wrapper.setProps({ total: 100, over: 120 });
+
+    expect(wrapper.isEmptyRender()).toBe(true);
+  });
+
+  it("should NOT render text and button if data is loading", () => {
+    wrapper.setProps({ total: 150, over: 100, isLoaded: false });
+
+    expect(wrapper.isEmptyRender()).toBe(true);
   });
 });
