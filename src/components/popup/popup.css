@@ -1,0 +1,111 @@
+.rc-dialog-mask {
+  background: rgba(0, 0, 0, 0.8);
+  bottom: 0;
+  height: 100%;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: calc(1000 + 1);
+}
+
+.rc-dialog-wrap {
+  align-items: center;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  left: 0;
+  overflow: auto;
+  outline: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: calc(1000 + 2);
+  -webkit-overflow-scrolling: touch;
+}
+
+.rc-dialog {
+  position: relative;
+  width: auto;
+  max-width: calc(100% - 90px);
+}
+
+.rc-dialog-mask-hidden {
+  display: none;
+}
+
+.rc-dialog-content {
+  background-color: #fff;
+  box-sizing: border-box;
+  margin: 30px 0;
+  position: relative;
+}
+
+.rc-dialog-content + div {
+  display: none;
+}
+
+.rc-dialog-body {
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.rc-dialog-body iframe {
+  display: block;
+  margin: -1px;
+}
+
+.rc-dialog-close {
+  border: 0;
+  background: #1c86da;
+  cursor: pointer;
+  height: 42px;
+  position: absolute;
+  right: -42px;
+  top: 10px;
+  width: 42px;
+}
+
+.rc-dialog-close::before {
+  content: "";
+  position: absolute;
+  top: 21px;
+  right: 13px;
+  width: 15px;
+  height: 1px;
+  background-color: #fff;
+  transform: rotate(135deg);
+}
+
+.rc-dialog-close::after {
+  content: "";
+  position: absolute;
+  top: 21px;
+  right: 13px;
+  width: 15px;
+  height: 1px;
+  background-color: #fff;
+  transform: rotate(45deg);
+}
+
+.full-popup {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  max-width: 100%;
+}
+
+.full-popup .rc-dialog-content {
+  margin: 0;
+}
+
+.full-popup .rc-dialog-close {
+  right: 20px;
+  top: 20px;
+}
+
+.hideClose .rc-dialog-close {
+  display: none;
+}

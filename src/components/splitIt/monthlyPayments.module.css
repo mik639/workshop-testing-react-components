@@ -1,0 +1,107 @@
+.monthlyPayments {
+  width: 730px;
+  height: auto;
+}
+
+.header {
+  box-sizing: border-box;
+  height: 50px;
+  background: #23aae2;
+}
+
+.headerCaption {
+  margin: 0;
+  font: normal 16px/50px Arial;
+  color: #fff;
+  text-align: center;
+}
+
+.body {
+  padding: 30px;
+}
+
+.bodyCaption {
+  margin-bottom: 20px;
+  font: bold 36px/41px Arial;
+  letter-spacing: -0.02em;
+  margin-top: 0;
+}
+
+.bodyDescription {
+  font: italic 18px/18px Arial;
+  letter-spacing: -0.02em;
+  color: #6d6d6d;
+}
+
+.bodyQuestion {
+  margin: 20px 0 5px;
+  color: #23aae2;
+  font: italic 19px/28px Georgia;
+  letter-spacing: -0.02em;
+}
+
+.bodyQuestionDescription {
+  list-style: decimal;
+  padding-left: 15px;
+}
+
+.bodyQuestionDescriptionItem {
+  font: normal 15px/24px Arial;
+  color: #000;
+  letter-spacing: -0.02em;
+}
+
+.bodyQuestion2 {
+  margin: 25px 0 10px;
+  color: #23aae2;
+  font: italic 15px/15px Georgia;
+  letter-spacing: -0.02em;
+}
+
+.bodyQuestion2Description {
+  margin-bottom: 20px;
+}
+
+.bodyQuestion2DescriptionItem {
+  font: normal 15px/24px Arial;
+  color: #000;
+  letter-spacing: -0.02em;
+}
+
+.bodyTable {
+  width: 630px;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.bodyTable th {
+  background-color: #5ecfea;
+  box-sizing: border-box;
+  padding-left: 30px;
+  height: 30px;
+  font: normal 15px/17px Arial;
+  color: #2c2c2c;
+  letter-spacing: -0.02em;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.bodyTable td {
+  box-sizing: border-box;
+  padding-left: 30px;
+  height: 30px;
+  font: normal 15px/17px Arial;
+  color: #2c2c2c;
+  letter-spacing: -0.02em;
+  text-align: left;
+  vertical-align: middle;
+  background-color: #f1f1f1;
+}
+
+.bodyAnswer {
+  margin-top: 25px;
+  font: 15px/24px Arial;
+  color: #2c2c2c;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
