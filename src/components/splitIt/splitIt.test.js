@@ -1,11 +1,14 @@
 import React from "react";
-import '@testing-library/jest-dom';
-import {render, waitFor, fireEvent} from '@testing-library/react';
+import { shallow, configure } from "enzyme";
+import Adapter from "enzyme-adapter-react-16";
 
 import { SplitIt } from "./splitIt";
 
+configure({ adapter: new Adapter(), disableLifecycleMethods: true });
+
 describe("<SplitIt/> in base product info", () => {
   let props;
+  let wrapper;
   beforeEach(() => {
     props = {
       total: 150,
@@ -15,53 +18,63 @@ describe("<SplitIt/> in base product info", () => {
       getData: jest.fn(),
       isLoaded: true
     };
+    wrapper = shallow(<SplitIt {...props} />);
     window.dataLayer = [];
   });
 
-  it('should call getData prop on mount', () => {
-    render(<SplitIt {...props} />);
-    expect(props.getData).toHaveBeenCalledTimes(1);
+  describe("componentDidMount method", () => {
+    it("should call props getData", () => {
+      expect(props.getData).not.toHaveBeenCalled();
+
+      wrapper.instance().componentDidMount();
+      expect(props.getData).toHaveBeenCalled();
+    });
+  });
+
+  describe("openPopup method", () => {
+    it("should change popupVisible in state in true", () => {
+      wrapper.setState({ popupVisible: false });
+      wrapper.instance().openPopup();
+      expect(wrapper.state("popupVisible")).toBe(true);
+    });
+
+    it("should send analytics event", () => {
+      const spy = jest.spyOn(window.dataLayer, "push");
+      expect(spy).not.toHaveBeenCalled();
+      wrapper.instance().openPopup();
+      expect(spy).toHaveBeenCalledWith({
+        event: "PDPInteraction",
+        eventAction: "Product Details",
+        eventCategory: "PDP - D",
+        eventLabel: "Learn More - Split It"
+      });
+    });
+  });
+
+  describe("closePopup method", () => {
+    it("should change popupVisible in state in false", () => {
+      wrapper.setState({ popupVisible: true });
+
+      wrapper.instance().closePopup();
+      expect(wrapper.state("popupVisible")).toBe(false);
+    });
   });
 
   it("should render text and button if total > over", () => {
-    const {queryByText, queryByTitle} = render(<SplitIt {...props} />);
-
-    expect(queryByText('Or $ 50.00 x 3')).toBeInTheDocument();
-    expect(queryByTitle('learn more')).toBeInTheDocument();
+    wrapper.setProps({ total: 150, over: 100 });
+    expect(wrapper.contains("Or $ 50.00 x 3")).toBe(true);
+    expect(wrapper.find('[title="learn more"]')).toHaveLength(1);
   });
 
   it("should NOT render text and button if total < over", () => {
-    const {queryByText, queryByTitle} = render(<SplitIt {...props} total={100} over={120} />);
+    wrapper.setProps({ total: 100, over: 120 });
 
-    expect(queryByText('Or $ 50.00 x 3')).not.toBeInTheDocument();
-    expect(queryByTitle('learn more')).not.toBeInTheDocument();
+    expect(wrapper.isEmptyRender()).toBe(true);
   });
 
   it("should NOT render text and button if data is loading", () => {
-    const {queryByText, queryByTitle} = render(<SplitIt {...props} isLoaded={false} />);
+    wrapper.setProps({ total: 150, over: 100, isLoaded: false });
 
-    expect(queryByText('Or $ 50.00 x 3')).not.toBeInTheDocument();
-    expect(queryByTitle('learn more')).not.toBeInTheDocument();
-  });
-
-  test('learn more popup', () => {
-    const {getByTitle, queryByText, getByRole, debug} = render(<SplitIt {...props} />);
-    const dataLayerSpy = jest.spyOn(window.dataLayer, 'push');
-
-    const button = getByTitle('learn more');
-    fireEvent.click(button);
-
-    expect(dataLayerSpy).toHaveBeenCalledWith({
-      event: "PDPInteraction",
-      eventAction: "Product Details",
-      eventCategory: "PDP - D",
-      eventLabel: "Learn More - Split It"
-    });
-    expect(queryByText('Your monthly payment $50 ($50 × 3 = $150)')).toBeInTheDocument();
-
-    const closeButton = getByRole('button', {name: 'Close'});
-    fireEvent.click(closeButton);
-
-    expect(queryByText('Your monthly payment $50 ($50 × 3 = $150)')).not.toBeInTheDocument();
+    expect(wrapper.isEmptyRender()).toBe(true);
   });
 });
